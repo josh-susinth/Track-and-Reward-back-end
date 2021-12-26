@@ -60,10 +60,10 @@ app.post("/emp", async(req,res)=>{
 });
 
 
+const PORT = process.env.PORT || 5000;
 
-
-app.listen(5000,()=>{
-    console.log("listening to 5000");
+app.listen(PORT,()=>{
+    console.log("listening to "+PORT);
 });
 
 app.get('/health', async (req, res) => {
