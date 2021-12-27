@@ -16,6 +16,33 @@ app.get("/emp", async(req,res)=>{
     } 
  })
 
+ //subscribe
+app.post("/subscribe/:emid/:eid", async(req,res)=>{
+    const{emid}=req.params;
+    const{eid}=req.params;
+    try {
+        const sub=await pool.query("INSERT INTO subscription (empid,pid) values ($1,$2) RETURNING *",
+       [emid,eid]);
+
+       res.json(sub);
+    } catch (err) {
+        console.error(err.message);
+    } 
+ })
+
+//unsubscribe
+app.post("/unsubscribe/:emid/:eid", async(req,res)=>{
+    const{emid}=req.params;
+    const{eid}=req.params;
+    try {
+        const unsub=await pool.query("DELETE FROM subscription WHERE empid=$1 AND pid=$2 RETURNING *",
+       [emid,eid]);
+
+       res.json(unsub);
+    } catch (err) {
+        console.error(err.message);
+    } 
+ }) 
 
 //subcription + initiative 
 
