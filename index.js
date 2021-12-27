@@ -4,8 +4,27 @@ const pool=require("./db")
  
 app.use(express.json());
 
-//select initiativ
-app.get("/emp", async(req,res)=>{
+//login api
+app.get("/login/:uname/:pwd", async(req,res)=>{
+    const{usrname}=req.params;
+    const{pswd}=req.params;
+    try {
+        const ini= await pool.query("SELECT count(*) FROM employee WHERE  username=$1 and password=$2", [usrname,pswd]);
+    
+        if(ini.rows.length>0){
+            console.log("login success");
+        }
+        else{
+            console.log("login not success");
+        }
+        res.json(ini.rows);
+    } catch (err) {
+        console.error(err.message);
+    } 
+})
+
+//select initiative
+app.get("/initiative", async(req,res)=>{
     const{id}=req.params;
     try {
         const ini= await pool.query("SELECT * FROM initiative ");
@@ -14,7 +33,7 @@ app.get("/emp", async(req,res)=>{
     } catch (err) {
         console.error(err.message);
     } 
- })
+})
 
  //subscribe
 app.post("/subscribe/:emid/:eid", async(req,res)=>{
@@ -46,7 +65,7 @@ app.post("/unsubscribe/:emid/:eid", async(req,res)=>{
 
 //subcription + initiative 
 
-app.get("/emp/:eid", async(req,res)=>{
+app.get("/list/:eid", async(req,res)=>{
     const{eid}=req.params;
     try {
         const ini= await pool.query("SELECT * FROM initiative left outer join subscription on initiative.pid=subscription.pid ");
