@@ -1,35 +1,33 @@
 const express= require("express");
 const app=express();
 const pool=require("./db")
- 
+const PORT = process.env.PORT || 5000;
+
 app.use(express.json());
 
+
 //login api
-app.get("/login/:uname/:pwd", async(req,res)=>{
-    const{usrname}=req.params;
-    const{pswd}=req.params;
+
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.get("/login", async(req,res)=>{
+    var uname=req.query.uname;
+    var pwd=req.query.pwd ;
+    console.log(uname);
+    console.log(pwd);
     try {
-        const ini= await pool.query("SELECT count(*) FROM employee WHERE  username=$1 and password=$2", [usrname,pswd]);
+        const ini= await pool.query("SELECT empid ,username FROM employee WHERE  username=$1 and password=$2", [uname,pwd]);
     
-        if(ini.rows.length>0){
+        if(ini.rows.length > 0) {
             console.log("login success");
+            res.json(ini.rows);
         }
         else{
             console.log("login not success");
+            res.send("INVALID USERNAME OR PASSWORD");
         }
-        res.json(ini.rows);
-    } catch (err) {
-        console.error(err.message);
-    } 
-})
-
-//select initiative
-app.get("/initiative", async(req,res)=>{
-    const{id}=req.params;
-    try {
-        const ini= await pool.query("SELECT * FROM initiative ");
         
-        res.json(ini.rows);
     } catch (err) {
         console.error(err.message);
     } 
@@ -87,26 +85,20 @@ app.get("/emp", async(req,res)=>{
     } 
  })
 
-//create/add a employee
+ //select initiative
+app.get("/initiative", async(req,res)=>{
+    const{id}=req.params;
+    try {
+        const ini= await pool.query("SELECT * FROM initiative ");
+        
+        res.json(ini.rows);
+    } catch (err) {
+        console.error(err.message);
+    } 
+})
 
 
-app.post("/emp", async(req,res)=>{
-   try {
-       const {empid}=req.body;
-       const {empname}=req.body;
-       const {designation}=req.body;
-       const {password}=req.body;
-       const newemp=await pool.query("INSERT INTO employee (empid,empname,designation,password) values ($1,$2,$3,$4) RETURNING *",
-       [empid,empname,designation,password]);
 
-       res.json(newemp);
-   } catch (err) {
-       console.error(err.message);
-   } 
-});
-
-
-const PORT = process.env.PORT || 5000;
 
 app.listen(PORT,()=>{
     console.log("listening to "+PORT);

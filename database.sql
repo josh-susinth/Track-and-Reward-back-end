@@ -64,3 +64,5 @@ ADD COLUMN username VARCHAR(25);
  select EMPID as "EMPLOYEE ID",EMPNAME as "EMPLOYEE NAME",DESIGNATION as "DESIGNATION", password as "PASSWORD",username as "USERNAME" from EMPLOYEE;
 
 UPDATE employee SET username = 'abit2k1' WHERE empid=300;
+
+psql --host=ec2-54-162-211-113.compute-1.amazonaws.com --port=5432 --username=jbaeomiywbkqbk --dbname=d2e9vh0jej4ej0
