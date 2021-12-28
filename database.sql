@@ -36,15 +36,7 @@ create table employee(
     REFERENCES initiative(pid)   
 );
 
-CREATE TABLE Department(  
-Department_id INT GENERATED ALWAYS AS IDENTITY,  
-Employee_id INT,  
-Department_name VARCHAR(200) NOT NULL,  
-PRIMARY KEY(Department_id),  
-CONSTRAINT fk_Employee  
-FOREIGN KEY(Employee_id)   
-REFERENCES Employee(Employee_id)  
-); 
+
 INSERT INTO initiative ("eventname","status","description","sdate","edate") 
 values ('event1','TRUE','description1','2021-12-02','2022-01-20');
 
@@ -62,9 +54,15 @@ values ('event5','TRUE','description4','2022-02-06','2022-02-19');
 
 INSERT INTO subscription ("empid","pid") values (300,5503);
 
+ALTER TABLE employee 
+ADD COLUMN username VARCHAR(25);
 
 //SELECT STMTS
 
  select sid as "SUBSCRIPTION ID",empid as "EMPLOYEE ID", pid as "INITIATIVE ID" from subscription;
  select pid as "INITIATIVE ID",eventname as "INITIATIVE NAME",STATUS as "INITIATIVE STATUS", description AS "DESCRIPTION",SDATE AS "START DATE" ,EDATE AS "END DATE"  from INITIATIVE;
- select EMPID as "EMPLOYEE ID",EMPNAME as "EMPLOYEE NAME",DESIGNATION as "DESIGNATION", password as "PASSWORD"  from EMPLOYEE;
+ select EMPID as "EMPLOYEE ID",EMPNAME as "EMPLOYEE NAME",DESIGNATION as "DESIGNATION", password as "PASSWORD",username as "USERNAME" from EMPLOYEE;
+
+UPDATE employee SET username = 'abit2k1' WHERE empid=300;
+
+psql --host=ec2-54-162-211-113.compute-1.amazonaws.com --port=5432 --username=jbaeomiywbkqbk --dbname=d2e9vh0jej4ej0
