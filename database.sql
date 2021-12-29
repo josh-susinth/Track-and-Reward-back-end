@@ -73,3 +73,10 @@ left outer join
 (select sid as "SUBSCRIPTION ID",empid as "EMPLOYEE ID",pid  from subscription where subscription.empid=301) b
 on b.pid=a.pid;
 
+select a.pid,a.eventname,a.status,a.description,a.sdate,a.edate ,b.sid,b.empid from 
+(select pid ,eventname,STATUS, description ,SDATE ,EDATE  from initiative) a
+left outer join 
+(select sid,empid ,pid from subscription where subscription.empid=301) b
+on b.pid=a.pid;
+
+select a.pid,a.eventname,a.status,a.description,a.sdate,a.edate ,b.sid,b.empid from (select pid ,eventname,STATUS, description ,SDATE ,EDATE  from initiative) a left outer join (select sid,empid ,pid from subscription where subscription.empid=$1) b on b.pid=a.pid;

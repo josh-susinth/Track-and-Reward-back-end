@@ -70,7 +70,7 @@ app.post("/unsubscribe/:emid/:eid", async(req,res)=>{
 app.get("/list/:eid", async(req,res)=>{
     const{eid}=req.params;
     try {
-        const ini= await pool.query("select * from (select * from initiative) a left outer join (select * from subscription where subscription.empid=$1)b on b.pid=a.pid",[eid]);
+        const ini= await pool.query("select a.pid,a.eventname,a.status,a.description,a.sdate,a.edate ,b.sid,b.empid from (select pid ,eventname,STATUS, description ,SDATE ,EDATE  from initiative) a left outer join (select sid,empid ,pid from subscription where subscription.empid=$1) b on b.pid=a.pid",[eid]);
         
         res.json(ini.rows);
     } catch (err) {
@@ -78,7 +78,7 @@ app.get("/list/:eid", async(req,res)=>{
     } 
  })
 
- //subscription table
+ //subscription
  app.get("/subscribed/:eid", async(req,res)=>{
     const{eid}=req.params;
     try {
