@@ -1,9 +1,13 @@
 const express= require("express");
 const app=express();
-const pool=require("./db")
+const pool=require("./db");
 const PORT = process.env.PORT || 5000;
-
 app.use(express.json());
+const cors = require('cors');
+app.use(cors({
+    origin: '*'
+}));
+
 
 
 //login api
@@ -17,7 +21,7 @@ app.get("/login", async(req,res)=>{
     console.log(uname);
     console.log(pwd);
     try {
-        const ini= await pool.query("SELECT empid ,username FROM employee WHERE  username=$1 and password=$2", [uname,pwd]);
+        const ini= await pool.query("SELECT empid ,empname FROM employee WHERE  username=$1 and password=$2", [uname,pwd]);
     
         if(ini.rows.length > 0) {
             console.log("login success");
@@ -25,7 +29,7 @@ app.get("/login", async(req,res)=>{
         }
         else{
             console.log("login not success");
-            res.send("INVALID USERNAME OR PASSWORD");
+            res.json(null);
         }
         
     } catch (err) {
@@ -73,6 +77,19 @@ app.get("/list/:eid", async(req,res)=>{
         console.error(err.message);
     } 
  })
+
+ //subscription table
+ app.get("/subscribed/:eid", async(req,res)=>{
+    const{eid}=req.params;
+    try {
+        const ini= await pool.query("select * from initiative natural join subscription where empid=$1 ",[eid]);
+        
+        res.json(ini.rows);
+    } catch (err) {
+        console.error(err.message);
+    } 
+})
+
 
 //get all employees
 app.get("/emp", async(req,res)=>{

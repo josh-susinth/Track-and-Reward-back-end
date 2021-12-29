@@ -66,3 +66,10 @@ ADD COLUMN username VARCHAR(25);
 UPDATE employee SET username = 'abit2k1' WHERE empid=300;
 
 psql --host=ec2-54-162-211-113.compute-1.amazonaws.com --port=5432 --username=jbaeomiywbkqbk --dbname=d2e9vh0jej4ej0
+
+select * from 
+(select pid ,eventname as "INITIATIVE NAME",STATUS as "INITIATIVE STATUS", description AS "DESCRIPTION",SDATE AS "START DATE" ,EDATE AS "END DATE" from initiative) a
+left outer join 
+(select sid as "SUBSCRIPTION ID",empid as "EMPLOYEE ID",pid  from subscription where subscription.empid=301) b
+on b.pid=a.pid;
+
